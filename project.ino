@@ -3,7 +3,6 @@
 #include<ESP8266WiFi.h>
 #include<Servo.h>
 #include<Wire.h>
-#include<LiquidCrystal.h>
 #include<ArduinoJson.h>
 
 
@@ -19,7 +18,7 @@ FirebaseData firebaseData;
 String Available= "";
 String fireAvailable="";
 
-LiquidCrystal lcd(16,5,4,0,2,14);
+
 
 Servo myservo;
 Servo myservos;
@@ -72,16 +71,10 @@ void setup() {
   Serial.println(WiFi.localIP());
 
   Firebase.begin(FIREBASE_HOST, FIREBASE_AUTH);
-  lcd.begin(16,2);
-  lcd.home();
-
-  lcd.setCursor(0,0);
-  lcd.print("Smart Parking");
-
+  
 }
 
 void loop() {
-   //put your main code here, to run repeatedly:
 //  take distance from ultrasonic sensor
   digitalWrite(TRIG, LOW);
   delayMicroseconds(2);
@@ -110,27 +103,22 @@ void loop() {
 
   if(countYes>50){
     Serial.print("Parking is full");
-    lcd.setCursor(0,1);
-    lcd.print("Parking Full");
     Serial.print(countYes);
     delay(3000);
-    lcd.clear();
+    
   }
   
   else{
     Serial.print("Car entered");
     Serial.println(countYes);
-    lcd.setCursor(0,1);
-    lcd.print("Car entered");
-
+  
     //open gate
     for(pos=45;pos<=140;pos+=1){
       myservos.write(pos);
       delay(5);
     }
-//    Firebase.pushString(firebaseData,"ParkingStatus/available/",fireAvailable);
       Firebase.setString(firebaseData,"ParkingStatus/available",fireAvailable);
-    lcd.clear();
+    
   }
   }
 
@@ -167,7 +155,7 @@ void loop() {
      // Firebase.pushString(firebaseData,"ParkingStatus/available/",fireAvailable);
 
       Firebase.setString(firebaseData,"ParkingStatus/available",fireAvailable);
-      lcd.clear();
+ 
     }
 }
 
@@ -189,6 +177,4 @@ if(distance>6){
 Empty= allSpace-countYes;
 Available= String("Available=") + String(Empty) + String("/") + String(allSpace);
 fireAvailable= String("Available=") + String(Empty) + String("/") + String(allSpace);
-lcd.setCursor(0,0);
-lcd.print(Available);
 }
