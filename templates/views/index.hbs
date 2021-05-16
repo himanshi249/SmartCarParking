@@ -1,0 +1,124 @@
+
+<html lang="en">
+<head>
+ <meta charset="UTF-8">
+ <script type="text/javascript" src="index.js"></script>
+ <title>Smart Car Park</title>
+ <link rel="stylesheet" href="./css/style.css">
+  <link rel="icon" href="/img/car.png">
+</head>
+<body>
+ {{!-- <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/fontawesome/4.7.0/css/font-awesome.min.css"> --}}
+ <script src="https://code.jquery.com/jquery-3.4.1.js" integrity="sha256-
+WpOohJOqMqqyKL9FccASB9O0KwACQJpFTUBLTYOVvVU="
+crossorigin="anonymous"></script>
+ <!-- Insert these scripts at the bottom of the HTML, but before you use any Firebase
+services -->
+ {{!-- <script src="https://www.gstatic.com/firebasejs/7.7.0/firebase-app.js"></script> --}}
+ <!-- Firebase App (the core Firebase SDK) is always required and must be listed first -->
+ <!-- The core Firebase JS SDK is always required and must be listed first -->
+<script src="https://www.gstatic.com/firebasejs/7.17.2/firebase-app.js"></script>
+
+<!-- TODO: Add SDKs for Firebase products that you want to use
+     https://firebase.google.com/docs/web/setup#available-libraries -->
+ <!-- If you enabled Analytics in your project, add the Firebase SDK for Analytics -->
+ <script src="https://www.gstatic.com/firebasejs/7.7.0/firebase-analytics.js"></script>
+ <!-- Add Firebase products that you want to use -->
+ <script src="https://www.gstatic.com/firebasejs/7.7.0/firebase-auth.js"></script>
+ <script src="https://www.gstatic.com/firebasejs/7.7.0/firebase-firestore.js"></script>
+ <script src="https://www.gstatic.com/firebasejs/7.7.0/firebase-database.js"></script>
+ <!-- partial:index.partial.html -->
+ {{>header}}
+ <header>
+ {{!-- <h1>
+ <span class="header-subtitile">Car Parking System</span> 
+<p class="header-title">
+ Parallel park
+ </p>
+ </h1> --}}
+ <br><br>
+ <h4 style="color: #606060">Use this site to check parking availability.</h4>
+
+ <h1 id="available"></h1> <!--var p1 = (snapshot.val()-->
+ <p style="color: mediumseagreen">Available</p>  
+ <p style="color: red">Taken</p>  <br>
+ </header>
+ 
+
+<script>
+  // Your web app's Firebase configuration
+  var firebaseConfig = {
+    apiKey: "AIzaSyD4lKW0uHWj6cuZ8rEwacLi41ivuU9_Rlg",
+    authDomain: "smartcarparking-5057b.firebaseapp.com",
+    databaseURL: "https://smartcarparking-5057b.firebaseio.com",
+    projectId: "smartcarparking-5057b",
+    storageBucket: "smartcarparking-5057b.appspot.com",
+    messagingSenderId: "30614055407",
+    appId: "1:30614055407:web:bacff5bd8c51df431c6e1a"
+  };
+  // Initialize Firebase
+  firebase.initializeApp(firebaseConfig);
+
+ 
+ firebase.analytics();
+ </script>
+ <div id="container">
+ <div id="p1">P1</div>
+ <div id="p2">P2</div>  <!--p1, p2,p3,p4 are parking space ids -->
+ <div id="p3">P3</div>
+ <div id="p4">P4</div> <span></span>
+ </div>
+ <script src="./script.js"></script>
+ <script>
+ $(function() {
+ setInterval(oneSecondFunction, 1000);
+ });
+ function oneSecondFunction() {
+     // stuff you want to do every second
+ var ref = firebase.database().ref("/ParkingStatus");
+ //var database = firebase.database();
+ref.once('value', gotUserData)
+ function gotUserData(snapshot) {
+ var parkk = (snapshot.val() && snapshot.val().available || 'Anonymous');
+ for(i in parkk){
+   var a=JSON.stringify(parkk[i])
+ }
+ 
+ document.getElementById('available').innerHTML = a;
+ }
+ }
+ </script>
+ <script>
+ $(function() {
+ setInterval(oneSecondfunction, 1000);
+ });
+ function oneSecondfunction() {
+ // stuff you want to do every second
+ var reff = firebase.database().ref("/ParkingSpace"); //referencing(reading) data from db
+ //var database = firebase.database();
+ reff.once('value', gotUserDataa)   //Listens for exactly one event of the specified event type, and then stops listening.
+ function gotUserDataa(snapshot) {
+ var p1 = (snapshot.val() && snapshot.val().p1) || 'Anonymous';
+ var p2 = (snapshot.val() && snapshot.val().p2) || 'Anonymous';
+ console.log(p1);
+ console.log(p2);
+ if (p1 == 1) {
+ document.getElementById("p1").style.backgroundColor = "red";
+ } else {
+ document.getElementById("p1").style.backgroundColor = "mediumseagreen";
+ }
+ if (p2 == 1) {
+ document.getElementById("p2").style.backgroundColor = "red";
+ }
+ if (p3 == 1) {
+ document.getElementById("p3").style.backgroundColor = "red";
+ }
+ if (p4 == 1) {
+ document.getElementById("p4").style.backgroundColor = "red";
+ }
+ }
+ }
+ </script>
+ {{>footer}}
+</body>
+</html>
